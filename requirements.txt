@@ -1,0 +1,22 @@
+Django
+django-simple-history
+-e /home/django/source/django-revision
+-e /home/django/source/edc-base
+-e /home/django/source/edc-constants
+-e /home/django/source/edc-dashboard
+-e /home/django/source/edc-device
+-e /home/django/source/edc-fieldsets
+-e /home/django/source/edc-form-validators
+-e /home/django/source/edc-identifier
+-e /home/django/source/edc-lab
+-e /home/django/source/edc-lab-dashboard
+-e /home/django/source/edc-label
+-e /home/django/source/edc-model-admin
+-e /home/django/source/edc-model-wrapper
+-e /home/django/source/edc-navbar
+-e /home/django/source/edc-protocol
+-e /home/django/source/edc-reports
+-e /home/django/source/edc-search
+-e /home/django/source/edc-subject-dashboard
+-e /home/django/source/lis-dashboard
+-e /home/django/source/sample-reception
