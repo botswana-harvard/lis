@@ -1,0 +1,4 @@
+include AUTHORS CHANGES README.md LICENCE
+recursive-include lis/templates/*
+recursive-include lis/static/*
+recursive-include label_templates/*
