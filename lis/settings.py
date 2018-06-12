@@ -175,6 +175,7 @@ MAIN_NAVBAR_NAME = APP_NAME
 
 EDC_LAB_REQUISITION_MODEL = 'sample_reception.subjectrequisition'
 LABEL_TEMPLATE_FOLDER = os.path.join(BASE_DIR, 'label_templates')
+print(LABEL_TEMPLATE_FOLDER, '_________________________')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -194,7 +195,7 @@ DASHBOARD_BASE_TEMPLATES = {
 }
 
 CUPS_SERVERS = {
-    'localhost': None}
+    'localhost': 'localhost'}
 
 COUNTRY = 'botswana'
 
