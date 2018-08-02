@@ -1,22 +1,25 @@
 Django
 django-simple-history
--e /home/django/source/django-revision
--e /home/django/source/edc-base
--e /home/django/source/edc-constants
--e /home/django/source/edc-dashboard
--e /home/django/source/edc-device
--e /home/django/source/edc-fieldsets
--e /home/django/source/edc-form-validators
--e /home/django/source/edc-identifier
--e /home/django/source/edc-lab
--e /home/django/source/edc-lab-dashboard
--e /home/django/source/edc-label
--e /home/django/source/edc-model-admin
--e /home/django/source/edc-model-wrapper
--e /home/django/source/edc-navbar
--e /home/django/source/edc-protocol
--e /home/django/source/edc-reports
--e /home/django/source/edc-search
--e /home/django/source/edc-subject-dashboard
--e /home/django/source/lis-dashboard
--e /home/django/source/sample-reception
+git+https://github.com/erikvw/django-revision.git@0.1.14#egg=django-revision
+git+https://github.com/botswana-harvard/edc-base.git@0.2.22#egg=edc-base
+git+https://github.com/botswana-harvard/edc-consent.git@0.2.8#egg=edc-consent
+git+https://github.com/botswana-harvard/edc-constants.git@0.2.7#egg=edc-constants
+git+https://github.com/botswana-harvard/edc-dashboard.git@0.2.8#egg=edc-dashboard
+git+https://github.com/botswana-harvard/edc-lab.git@0.2.18#egg=edc-lab
+git+https://github.com/botswana-harvard/edc-lab-dashboard.git@0.1.9#egg=edc-lab-dashboard
+git+https://github.com/botswana-harvard/edc-device.git@0.2.6#egg=edc-device
+git+https://github.com/botswana-harvard/edc-fieldsets.git@0.1.1#egg=edc-fieldsets
+git+https://github.com/botswana-harvard/edc-form-validators.git@0.1.2#egg=edc-form-validators
+git+https://github.com/botswana-harvard/edc-identifier.git@0.2.10#egg=edc-identifier
+git+https://github.com/botswana-harvard/edc-label.git@0.1.7#egg=edc-label
+git+https://github.com/botswana-harvard/edc-model-wrapper.git@0.1.7#egg=edc-model-wrapper
+git+https://github.com/botswana-harvard/edc-navbar.git@0.1.2#egg=edc-navbar
+git+https://github.com/botswana-harvard/edc-navbar.git@0.1.2#egg=edc-navbar
+git+https://github.com/botswana-harvard/edc-protocol.git@0.1.5#egg=edc-protocol
+git+https://github.com/botswana-harvard/edc-reports@0.1.1#egg=edc-reports
+git+https://github.com/botswana-harvard/edc-search.git@0.1.5#egg=edc-search
+git+https://github.com/botswana-harvard/edc-subject-dashboard.git@0.1.4#egg=edc-subject-dashboard
+git+https://github.com/botswana-harvard/sample-reception.git
+git+https://github.com/botswana-harvard/edc-model-admin.git@0.1.1#egg=edc-model-admin
+git+https://github.com/botswana-harvard/lis-dashboard.git
+git+https://github.com/botswana-harvard/lis-labs.git
