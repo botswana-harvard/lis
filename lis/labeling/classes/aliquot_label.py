@@ -53,7 +53,8 @@ class AliquotLabel(ModelLabel):
     def refresh_label_context(self):
         aliquot = self.model_instance
         subject_identifier = aliquot.get_subject_identifier()
-        registered_subject = RegisteredSubject.objects.get(subject_identifier=subject_identifier)
+        registered_subject = RegisteredSubject.objects.get(
+            subject_identifier=subject_identifier)
         primary = ''
         if aliquot.aliquot_identifier[-2:] == '01':
             primary = "<"
@@ -77,6 +78,10 @@ class AliquotLabel(ModelLabel):
     def print_label_for_aliquot(self, request, aliquot):
         """ Prints a label flags this aliquot as 'labeled' to be called as an action."""
         if aliquot.aliquot_identifier:
-            self.print_label(request, aliquot, 1)
+            if aliquot.aliquot_identifier[-2:] == '01':
+                count = aliquot.subject_requisition.item_count_total
+                self.print_label(request, aliquot, count)
+            else:
+                self.print_label(request, aliquot, 1)
             aliquot.modified = datetime.today()
             aliquot.save()
