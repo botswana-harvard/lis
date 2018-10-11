@@ -72,6 +72,7 @@ class AliquotLabel(ModelLabel):
             'gender': registered_subject.gender,
             'dob': registered_subject.dob,
             'initials': registered_subject.initials,
+            'panel': aliquot.subject_requisition.panel.name,
             'aliquot_type': aliquot.aliquot_type.alpha_code.upper()})
         self.label_context.update(**custom)
 

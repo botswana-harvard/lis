@@ -7,6 +7,7 @@ from .label import Label
 
 class ModelLabel(Label):
     """ Print a label building the template and context from the model."""
+
     def __init__(self):
         super(ModelLabel, self).__init__()
         self._model_instance = None
@@ -20,11 +21,13 @@ class ModelLabel(Label):
 
         Also updates django messages."""
         if request:
-            client_addr = client_addr or request.META.get('REMOTE_ADDR')
+            client_addr = client_addr or request.META.get(
+                'HTTP_X_FORWARDED_FOR')
         self.model_instance = model_instance
         copies = copies or 1
         try:
-            msg = super(ModelLabel, self).print_label(copies, client_addr=client_addr)
+            msg = super(ModelLabel, self).print_label(
+                copies, client_addr=client_addr)
             print_success = True
         except LabelPrinterError as label_printer_error:
             msg = str(label_printer_error)
@@ -52,8 +55,10 @@ class ModelLabel(Label):
         for field in self.model_instance._meta.fields:
             value = getattr(self.model_instance, field.attname, field.attname)
             try:
-                self.label_context.update({field.attname: value.strftime('%Y-%m-%d %H:%M')})
+                self.label_context.update(
+                    {field.attname: value.strftime('%Y-%m-%d %H:%M')})
             except AttributeError:
                 self.label_context.update({field.attname: value})
-        self.label_context.update({'barcode_value': self.model_instance.barcode_value()})
+        self.label_context.update(
+            {'barcode_value': self.model_instance.barcode_value()})
         return True

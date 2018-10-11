@@ -1,17 +1,16 @@
-import cups
-import tempfile
-import socket
-
 from collections import namedtuple
 from datetime import datetime
+import socket
 from string import Template
+import tempfile
 
 from django.conf import settings
 from django.core.exceptions import MultipleObjectsReturned
 
+import cups
+
 from ..exceptions import LabelPrinterError
 from ..models import ZplTemplate, LabelPrinter, Client
-
 from .named_tuples import ClientTuple
 
 
@@ -31,6 +30,7 @@ class Label(object):
     the settings attribute LABEL_PRINTER_TIMEOUT, e.g.
     LABEL_PRINTER_TIMEOUT = 25
 """
+
     def __init__(self):
         self._client = None
         self._cups_printer_name = None
@@ -44,7 +44,7 @@ class Label(object):
         self.message = None
         self.msgs = None
         self._conn = None
- 
+
     @property
     def cups_printer_name(self):
         """Returns the cups printer name as queried from lab_printer.
@@ -74,12 +74,14 @@ class Label(object):
         except Client.DoesNotExist:
             self.cups_server = 'localhost'  # default
             cups_hostname = self.cups_server.hostname
-            self._client = ClientTuple(hostname, aliases, ip, None, cups_hostname)
+            self._client = ClientTuple(
+                hostname, aliases, ip, None, cups_hostname)
             try:
                 printer_name = self.label_printer.cups_printer_name
             except AttributeError:
                 printer_name = None
-        self._client = ClientTuple(hostname, aliases, ip, printer_name, cups_hostname)
+        self._client = ClientTuple(
+            hostname, aliases, ip, printer_name, cups_hostname)
 
     @property
     def cups_server(self):
@@ -104,7 +106,8 @@ class Label(object):
                 ip = socket.gethostbyname(hostname_or_ip)
                 hostname, aliases, ip = socket.gethostbyaddr(ip)
             except (socket.gaierror, socket.herror):
-                raise TypeError('Expected a valid hostname. Update the hosts file or DNS. Got {}'.format(hostname_or_ip))
+                raise TypeError(
+                    'Expected a valid hostname. Update the hosts file or DNS. Got {}'.format(hostname_or_ip))
         return hostname, aliases, ip
 
     @property
@@ -149,23 +152,30 @@ class Label(object):
                     'label_count_total': copies,
                     'timestamp': datetime.today().strftime('%Y-%m-%d %H:%M')})
                 if self.debug:
-                    print ('client_addr \'{}\''.format(client_addr))
-                    print ('template \'{}\''.format(self.zpl_template))
-                    print ('label_printer \'{}\', default=\'{}\''.format(self.label_printer, self.label_printer.default))
-                    print ('cups printer name \'{}\''.format(self.label_printer.cups_printer_name))
-                    print ('cups_server_ip \'{}\''.format(self.cups_server.ip))
-                    print ('cups_server_name \'{}\''.format(self.cups_server.hostname))
+                    print('client_addr \'{}\''.format(client_addr))
+                    print('template \'{}\''.format(self.zpl_template))
+                    print('label_printer \'{}\', default=\'{}\''.format(
+                        self.label_printer, self.label_printer.default))
+                    print('cups printer name \'{}\''.format(
+                        self.label_printer.cups_printer_name))
+                    print('cups_server_ip \'{}\''.format(self.cups_server.ip))
+                    print(
+                        'cups_server_name \'{}\''.format(self.cups_server.hostname))
                 with open(self.file_name, 'w') as f:
                     f.write(self.formatted_label_string)
                 try:
                     job_id = self.cups_connection.printFile(self.cups_printer_name,
                                                             self.file_name,
                                                             "edc_label",
-                                                            {'raw': self.file_name}  # don't let CUPS render!
+                                                            # don't let CUPS
+                                                            # render!
+                                                            {'raw':
+                                                                self.file_name}
                                                             )
                     self.message = ('Successfully printed {1}/{2} label(s) \'{0}\' to '
                                     '{3} (default={4}) on CUPS@{5} for client \'{7}\' Job_ID {6}'.format(
-                                        self.label_context.get('barcode_value'),
+                                        self.label_context.get(
+                                            'barcode_value'),
                                         (copies - i + 1),
                                         copies,
                                         self.cups_printer_name,
@@ -190,30 +200,35 @@ class Label(object):
             LABEL_PRINTER_MAKE_AND_MODEL = ['Zebra ZPL Label Printer']."""
         if not self._label_printer:
             if self.debug:
-                print ('LabelPrinter not set by Client. Searching CUPS and EDC LabelPrinter')
+                print(
+                    'LabelPrinter not set by Client. Searching CUPS and EDC LabelPrinter')
             # try for a label printer in CUPS set to default in CUPS
             dest = self.cups_connection.getDests().get((None, None))
             if dest:
                 if dest.options['printer-make-and-model'] in settings.LABEL_PRINTER_MAKE_AND_MODEL:
                     try:
                         if self.debug:
-                            print ('Default in CUPS is {}@{}'.format(dest.name, self.cups_server.hostname))
+                            print('Default in CUPS is {}@{}'.format(
+                                dest.name, self.cups_server.hostname))
                         self._label_printer = LabelPrinter.objects.get(
                             cups_printer_name=dest.name,
                             cups_server_hostname=self.cups_server.hostname,
-                            )
+                        )
                         if self.debug:
-                            print ('Selected EDC LabelPrinter {}@{} that is the default in CUPS.'.format(dest.name, self.cups_server.hostname))
+                            print('Selected EDC LabelPrinter {}@{} that is the default in CUPS.'.format(
+                                dest.name, self.cups_server.hostname))
                     except LabelPrinter.DoesNotExist:
                         if self.debug:
-                            print ('... not selecting {}@{}. Not an EDC LabelPrinter'.format(dest.name, self.cups_server.hostname))
+                            print('... not selecting {}@{}. Not an EDC LabelPrinter'.format(
+                                dest.name, self.cups_server.hostname))
                         pass
             if not self._label_printer:
                 # try for a label printers in CUPS set to default in the EDC?
                 if self.debug:
-                    print ('Searching for any CUPS printer that is the default EDC LabelPrinter.')
+                    print(
+                        'Searching for any CUPS printer that is the default EDC LabelPrinter.')
                 cups_printer_names = []
-                for dest in self.cups_connection.getDests().itervalues():
+                for dest in self.cups_connection.getDests().values():
                     if dest.options['printer-make-and-model'] in settings.LABEL_PRINTER_MAKE_AND_MODEL:
                         try:
                             cups_printer_names.append(dest.name)
@@ -222,18 +237,21 @@ class Label(object):
                                 cups_server_hostname=self.cups_server.hostname,
                                 default=True)
                             if self.debug:
-                                print ('Selected CUPS {}@{} that is default LabelPrinter in EDC.'.format(dest.name, self.cups_server.hostname))
+                                print('Selected CUPS {}@{} that is default LabelPrinter in EDC.'.format(
+                                    dest.name, self.cups_server.hostname))
                             break
                         except LabelPrinter.DoesNotExist:
                             if self.debug:
-                                print ('... not selecting CUPS {}@{}. Not the default EDC LabelPrinter or not found'.format(dest.name, self.cups_server.hostname))
+                                print('... not selecting CUPS {}@{}. Not the default EDC LabelPrinter or not found'.format(
+                                    dest.name, self.cups_server.hostname))
                             pass
             if not self._label_printer:
                 try:
                     self._label_printer = LabelPrinter.objects.get(cups_printer_name__in=cups_printer_names,
                                                                    default=False)
                     if self.debug:
-                        print ('Selected the default in LabelPrinter, {}'.format(dest.name, self.cups_server.hostname))
+                        print('Selected the default in LabelPrinter, {}'.format(
+                            dest.name, self.cups_server.hostname))
                 except MultipleObjectsReturned:
                     self._label_printer = None
                     raise LabelPrinterError('Unable to select a label printer for client \'{0}\'.\nClient not '
