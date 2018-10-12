@@ -22,7 +22,7 @@ class ModelLabel(Label):
         Also updates django messages."""
         if request:
             client_addr = client_addr or request.META.get(
-                'HTTP_X_FORWARDED_FOR')
+                'REMOTE_ADDR')
         self.model_instance = model_instance
         copies = copies or 1
         try:
